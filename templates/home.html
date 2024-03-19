@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <title>Welcome</title>
+  </head>
+  <body>
+    <nav class="main-nav">
+      <div class="fas fa-2x">
+        <!-- <img src="../static/images/logo.png" alt="logo" width="50" height="40" /> -->
+        <span class="logo">TUC DriveCloud</span>
+      </div>
+      <ul class="main-menu">
+        <li>
+          <a href="#">Home <i class="fa-solid fa-house"></i></a>
+        </li>
+        <li>
+          <a href="#">Analysis <i class="fa-solid fa-wrench"></i></a>
+        </li>
+        <li>
+          <a href="result.html"
+            >Result <i class="fa-solid fa-chart-line"></i
+          ></a>
+        </li>
+        <li>
+          <a href="#">About <i class="fa-solid fa-screwdriver-wrench"></i></a>
+        </li>
+        <li>
+          <a href="#">Help <i class="fa-sharp fa-solid fa-circle-info"></i></a>
+        </li>
+        <li>
+          <a href="setting.html">Setting <i class="fa-solid fa-gear"></i></a>
+        </li>
+      </ul>
+      <ul class="right-menu">
+        <li>
+          <a href="index.html"
+            ><i class="fa-solid fa-user user-profile-icon"></i>Logout</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <div class="main-container">
+      <section>
+        <div class="UploadRight">
+          <form id="createNodes" action="/recognition" method="POST">
+            <div class="form-control">
+              <label for="nodes">Upload Image File</label>
+              <input
+                class="custom-file-input"
+                type="file"
+                id="i_files"
+                name="i_files"
+                multiple
+                onchange="load_canvas()"
+              />
+            </div>
+
+            <br />
+            <div class="form-control">
+              <label for="select">Choose Algorithm</label>
+              <select id="algorithm" name="algorithm">
+                <option value="choices">Choices...</option>
+                <option value="cnn">CNN</option>
+                <option value="lenet">LENET</option>
+                <option value="yolo">YoLo5</option>
+              </select>
+            </div>
+            <div class="form-control">
+              <button
+                type="button"
+                class="btn btnBig"
+                id="start-recog"
+                onclick="get_detection()"
+              >
+                <i class="fa-solid fa-play"></i>Start Recognition
+              </button>
+              <div class="loader hidden" id="loader"></div>
+            </div>
+          </form>
+        </div>
+
+        <div class="UploadLeft">
+          <div class="form-control uploadImg" id="Uploaded_image">
+            <div class="imageBox imageBoxDisplay">
+              <h3>Uploaded Image</h3>
+              <img
+                id="imageBox1"
+                src="../static/images/Italian_traffic_signs.png"
+                alt=""
+              />
+            </div>
+            <div class="imageBox imageBoxDisplay">
+              <h3>Detected Image</h3>
+              <img
+                id="imageBox2"
+                src="../static/images/Italian_traffic_signs.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <div>
+            <h3 id="detection" class="detection">Recognized Traffic Sign:</h3>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="sectionDivider sectionHeader">
+          <h3>Model Train Output</h3>
+        </div>
+      </section>
+      <section>
+        <div class="feature">
+          <h3>Recall Data</h3>
+          <div id="recall-table"></div>
+
+          <div class="fileSaveArea" id="save-file-area">
+            <button
+              type="button"
+              class="btn saveDataBtn"
+              id="recall-data-btn"
+              onclick="recall_table()"
+            >
+              Recall
+            </button>
+            <form action="#" class="toggle-hidden hidden">
+              <div class="safeFile">
+                <input
+                  name="net_size_x"
+                  type="text"
+                  id="nsizex"
+                  placeholder="Type a file name"
+                  value=""
+                />
+                <button type="submit" class="btn">Save</button>
+                <button
+                  type="button"
+                  class="btn cancelSaveBtn"
+                  id="cancel-save-btn"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="feature">
+          <h3>Precision Data</h3>
+          <div id="precision-table"></div>
+
+          <div class="fileSaveArea" id="save-file-area">
+            <button
+              type="button"
+              class="btn saveDataBtn"
+              id="precision-data-btn"
+              onclick="precision_table()"
+            >
+              Precision
+            </button>
+            <form action="#" class="toggle-hidden hidden">
+              <div class="safeFile">
+                <input
+                  name="net_size_x"
+                  type="text"
+                  id="nsizex"
+                  placeholder="Type a file name"
+                  value=""
+                />
+                <button type="submit" class="btn">Save</button>
+                <button
+                  type="button"
+                  class="btn cancelSaveBtn"
+                  id="cancel-save-btn"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="sectionDivider sectionHeader">
+          <h3>Graph Data</h3>
+        </div>
+      </section>
+      <section>
+        <div class="safeFile">
+          <button
+            type="submit"
+            class="btn"
+            id="cnnGraph"
+            onclick="show_cnnGraph()"
+          >
+            VGG Net
+          </button>
+          <button
+            type="submit"
+            class="btn"
+            id="lenetGraph"
+            onclick="show_lenetGraph()"
+          >
+            LeNet5
+          </button>
+          <button
+            type="submit"
+            class="btn right"
+            id="yoloGraph"
+            onclick="show_yoloGraph()"
+          >
+            Yolov5
+          </button>
+        </div>
+        <div id="graph1Container" class="feature hide">
+          <h3 id="graphName1" style="text-align: center">
+            VGG Net Accuracy (Train vs Val)
+          </h3>
+          <div id="graphDiv1" class="graphImg">
+            <img
+              id="graphImg1"
+              src="../static/images/cnn_accuracy.png"
+              alt="Graph"
+            />
+          </div>
+        </div>
+        <div id="graph2Container" class="feature hide">
+          <h3 id="graphName2" style="text-align: center">
+            VGG Net Loss (Train vs Val)
+          </h3>
+          <div id="graphDiv2" class="graphImg">
+            <img
+              id="graphImg2"
+              src="../static/images/cnn_loss.png"
+              alt="Graph"
+            />
+          </div>
+        </div>
+        <!-- <div class="feature">
+          <p>Graph will display here</p>
+          <div class="graphImg">
+            <img src="../static/images/prc_3.png" alt="Graph" />
+          </div>
+        </div> -->
+        <!-- <div class="feature">
+          <p>Graph will display here</p>
+          <div class="graphImg">
+            <img src="../static/images/prc_3.png" alt="Graph" />
+          </div>
+        </div>
+        <div class="feature">
+          <p>Graph will display here</p>
+          <div class="graphImg">
+            <img src="../static/images/prc_3.png" alt="Graph" />
+          </div>
+        </div>
+        <div class="feature">
+          <p>Graph will display here</p>
+          <div class="graphImg">
+            <img src="../static/images/prc_3.png" alt="Graph" />
+          </div>
+        </div> -->
+      </section>
+    </div>
+  </body>
+  <script src="../static/js/load_canvas.js"></script>
+  <script src="../static/js/cnn_table.js"></script>
+  <script src="../static/js/lenet_table.js"></script>
+  <script src="../static/js/yolov5_table.js"></script>
+  <script src="../static/js/graph.js"></script>
+  <script>
+    function get_detection() {
+      var choice_obj = document.getElementById("algorithm");
+      var choice_txt = choice_obj.options[choice_obj.selectedIndex].value;
+      //var choice_txt = "lennet";
+      //fetch_detection(choice_txt);
+      //#call();
+      console.log(choice_txt);
+      send_image(choice_txt);
+    }
+
+    function fetch_detection(choice_txt) {
+      fetch("/recognition", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          algorithm_name: choice_txt,
+        }),
+      })
+        .then(function (response) {
+          if (response.ok) {
+            response.json().then(function (data) {
+              document.getElementById("result").innerHTML = data.ImageFileName; //ImageFileName from backend
+              console.log(response.ImageFileName);
+            });
+          } else {
+            throw Error("Something went wrong");
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    //send image to server
+    function send_image(choice_txt) {
+      //console.log(choice_txt)
+      let i_file = document.getElementById("i_files").files[0];
+      let i_fileName = i_file.name;
+      let selected_algorithm = choice_txt;
+
+      var formData = new FormData();
+      formData.append("i_filename", i_fileName);
+      formData.append("i_file", i_file);
+      formData.append("dropdown", selected_algorithm);
+
+      console.log(formData.get("i_file"));
+
+      let url = "/recognition";
+      fetch(url, {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          //let a = 100;
+          if (data !== null) {
+            console.log("success-----------");
+            const imageUrl = data.image_url;
+            // Use the image URL to display the detected image
+            document.querySelector("#imageBox2").src = "/image/" + imageUrl;
+            document.getElementById("detection").innerHTML =
+              "Recognized Traffic Sign:  " + '"' + data.result + '"';
+            console.log("success");
+          } else {
+            console.log("NOT positive");
+          }
+        })
+        .catch((error) => console.error(error));
+
+      //test end
+    }
+  </script>
+</html>

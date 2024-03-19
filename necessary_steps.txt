@@ -1,0 +1,10 @@
+Python 3.10.6 is used in the development environment.
+Create the virtual environment in the root:"python -m venv /path/to/directory"
+Activate the virtual environment:- On Windows using the Command Prompt: "path\to\venv\Scripts\activate.bat"
+                                 - On Unix or MacOS, using the bash shell: "source /path/to/venv/bin/activate"
+Install packages in virtual environments : "pip install -r requirements.txt" 
+Specify how to load the application:Unix Bash (Linux, Mac, etc.):"export FLASK_APP=app.py"
+                                    :-windows:"set FLASK_APP=app.py"  
+Run the application: "flask run"
+Application will be running on: "http://localhost:5000/".
+Open http://localhost:5000/   on a internet browser.                                
